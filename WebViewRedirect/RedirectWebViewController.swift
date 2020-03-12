@@ -92,16 +92,19 @@ extension RedirectWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         decisionHandler(WKNavigationActionPolicy.allow) // Must be called or app will crash
         
-        if navigationAction.request.url?.absoluteString == redirectTargetURL {
-            
-            guard let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: String(describing: RedirectWebViewController.self)) as? RedirectWebViewController else { return }
-            
-            controller.url = self.url // Set URL to load
-            controller.redirectTargetURL = self.redirectTargetURL // Set desired URL
-            
-            self.navigationController?.pushViewController(controller, animated: true)
-            
-        }
+        // Do not do anything ?
+    }
+    
+    func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+        
+        // Do redirect
+        
+        guard let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: String(describing: RedirectWebViewController.self)) as? RedirectWebViewController else { return }
+        
+        controller.url = self.url // Set URL to load
+        controller.redirectTargetURL = self.redirectTargetURL // Set desired URL
+        
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 }
 
